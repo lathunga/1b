@@ -1,0 +1,13 @@
+#include "kernel/types.h"
+#include "kernel/stat.h"
+#include "user/user.h"
+
+int main(int argc, char *argv[])
+{
+  //nice(atoi(argv[1]));
+  //sleep(5);
+  char **arr = (char **)argv[2];
+  printf("%s", arr[0]);
+  //exec(arr[0], (char **) argv[3]);
+  exit(0);
+}

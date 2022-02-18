@@ -133,6 +133,8 @@ UPROGS=\
 	$U/_wc\
 	$U/_zombie\
 	$U/_ptest\
+	$U/_nice\
+	$U/_getpstat\
 
 fs.img: mkfs/mkfs README $(UPROGS)
 	mkfs/mkfs fs.img README $(UPROGS)

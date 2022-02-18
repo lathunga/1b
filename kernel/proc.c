@@ -5,6 +5,7 @@
 #include "spinlock.h"
 #include "proc.h"
 #include "defs.h"
+#include "pstat.h"
 
 struct cpu cpus[NCPU];
 
@@ -119,6 +120,7 @@ allocproc(void)
 found:
   p->pid = allocpid();
   p->state = USED;
+  p->nicevalue = 10;
 
   // Allocate a trapframe page.
   if((p->trapframe = (struct trapframe *)kalloc()) == 0){
@@ -653,4 +655,48 @@ procdump(void)
     printf("%d %s %s", p->pid, state, p->name);
     printf("\n");
   }
+}
+
+int
+nice(int nicevalue)
+{
+  if(nicevalue < 0 || nicevalue > 19)
+  {
+    return -1;
+  }
+  struct proc *p = myproc();
+  p->nicevalue = nicevalue;
+  return 0;  
+}
+
+int
+getpstat(struct pstat* kpstat)
+{
+  //struct proc *pp;
+
+  //for(pp = proc; pp < &proc[NPROC]; pp++)
+  //{
+  //  acquire(&pp->lock);
+  //  if(pp->state != UNUSED)
+  //  {
+
+  //  }
+  //  release(&pp->lock);
+  //}
+
+  for(int i=0; i<NPROC; i++)
+  {
+    if(proc[i].state!=UNUSED) 
+    {
+      kpstat->inuse[i] = 1;
+    }
+    else
+    {
+      kpstat->inuse[i] = 0;
+    }
+    kpstat->pid[i] = proc[i].pid;
+    kpstat->nice[i] = proc[i].nicevalue;
+  }
+
+  return 0;
 }
