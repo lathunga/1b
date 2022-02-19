@@ -112,19 +112,26 @@ sys_pcount(void)
 uint64
 sys_nice(void)
 {
+
+  // Use this variable to store the inputed argument.
   int nicevalue;
 
+  // Get the inputed argument and store it in the variable "nicevalue"
   if(argint(0, &nicevalue) < 0)
   {
     return -1;
   }
 
+  // Check to see if the inputed value is out of bounds
   if(nicevalue < 0 || nicevalue > 19)
   {
     return -1;
   }
   
-  return nice(nicevalue);
+  // Get the current process and change its nice value to the inputed value.
+  struct proc *p = myproc();
+  p->nicevalue = nicevalue;
+  return 0;
 }
 
 uint64
@@ -141,7 +148,20 @@ sys_getpstat(void)
 
   //TODO: fill the arrays in kpstat (see the definition of struct pstat above).
   // The data to fill in the arrays comes from the process table array proc[].
-  getpstat(&kpstat);
+  // Go through all processes in proc and fill in "kstat" with the needed information.
+  for(int i=0; i<NPROC; i++)
+  {
+    if(proc[i].state!=UNUSED)
+    {
+      kpstat.inuse[i] = 1;
+    }
+    else
+    {
+      kpstat.inuse[i] = 0;
+    }
+    kpstat.pid[i] = proc[i].pid;
+    kpstat.nice[i] = proc[i].nicevalue;
+  }
 
   // copy pstat from kernel memory to user memory
   if (copyout(p->pagetable, upstat, (char *)&kpstat, sizeof(kpstat)) < 0)

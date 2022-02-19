@@ -5,21 +5,13 @@
 int
 main(void)
 {
+  // Call getpstat to fill the pstat struct "stats"
   struct pstat stats;
   getpstat(&stats);
   // print the arrays in stats
   for(int i = 0; i<NPROC; i++)
   {
-    char* yn;
-    if(stats.inuse[i]==1)
-    {
-      yn = "yes";
-    }
-    else
-    {
-      yn = "no";
-    }
-    printf("In Use?: %s", yn);
+    printf("In Use?: %d", stats.inuse[i]);
     printf(" Process ID: %d", stats.pid[i]);
     printf(" Nice Value: %d\n", stats.nice[i]);
   }

@@ -1,0 +1,13 @@
+Name: Luke Thunga (I worked alone)
+
+Description: In this part of the project I added the capability to change the nice value
+of the called process. This required me to create a new system call "nice" that takes a 
+nice value as an argument. I also added a getpstat system call that allows you to fill a
+pstat struct with info about the processes.
+
+Files Added:
+  - user/getpstat.c (utility program to test getpstat system call)
+  - user/nice.c (utility program to test nice system call)
+
+Important Files Changed:
+  - kernel/sysproc.c (here is where I put the system calls "nice" and "getpstat")
